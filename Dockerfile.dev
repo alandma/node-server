@@ -1,0 +1,10 @@
+ARG NODE_TAG
+FROM node:${NODE_TAG}
+
+WORKDIR /home/node
+
+COPY package*.json ./
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]

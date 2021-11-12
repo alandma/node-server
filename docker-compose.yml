@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+  
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile.prd
+      args: 
+        NODE_TAG: alpine #Exemplo
+    networks: 
+      - node-net
+    ports: 
+      - "3000:3000"
+    command: npm run prod
+    healthcheck:
+      test: ["CMD", "nc", "-vz", "localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  
+  node-dev:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+      args: 
+        NODE_TAG: alpine #Exemplo
+    networks: 
+      - node-net
+    ports: 
+      - "3001:3000"
+      - "5860:5860" #Debug
+    volumes: 
+      - ./:/home/node
+    command: sh -c "npm install && npm run dev"
+
+networks: 
+  node-net:
+    driver: bridge
